@@ -40,9 +40,6 @@ class Connection:
 			if config.has_option(self.connection, 'base'):
 				self.base = get_config_option(config.get,
 					self.connection, 'base')
-				parse_result = urllib.parse.urlparse(self.base)
-				new_netloc = parse_result.netloc.split('@')[-1]
-				self.safe_base = parse_result._replace(netloc=new_netloc).geturl()
 			else:
 				log_error('No base URL specified')
 				sys.exit(1)
@@ -91,6 +88,10 @@ class Connection:
 					self.connection, 'skip_auth')
 			else:
 				self.skip_auth = False
+
+		parse_result = urllib.parse.urlparse(self.base)
+		new_netloc = parse_result.netloc.split('@')[-1]
+		self.safe_base = parse_result._replace(netloc=new_netloc).geturl()
 
 		if getattr(self, 'encoding', None) is not None:
 			log_info('The encoding option is deprecated.')
